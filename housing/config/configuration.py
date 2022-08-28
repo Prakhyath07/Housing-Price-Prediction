@@ -22,6 +22,7 @@ class Configuration:
 
     def get_data_ingestion_config(self) -> DataIngestionConfig:
         try:
+
             artifact_dir = self.training_pipeline_config.artifact_dir
             data_ingestion_artifact_dir= os.path.join(artifact_dir,DATA_INGESTION_ARTIFACT_DIR,self.time_stamp)
             data_ingestion_config = self.config_info[DATA_INGESTION_CONFIG_KEY]
@@ -49,19 +50,72 @@ class Configuration:
             raise customException(e, sys) from e
 
     def get_data_validation_config(self) -> DataValidationConfig:
-        pass
+        try:
+            data_validation_config = self.config_info[DATA_VALIDATION_CONFIG_KEY]
+            schema_dir = data_validation_config[DATA_VALIDATION_SCHEMA_DIR_KEY]
+            schema_file = os.path.join(ROOT_DIR,schema_dir,data_validation_config[DATA_VALIDATION_SCHEMA_NAME_KEY])
+
+            data_validation_config = DataValidationConfig(schema_file_path= schema_file)
+            return data_validation_config
+
+        except Exception as e:
+            raise customException(e, sys) from e
 
     def get_data_transformation(self) -> DataTransformConfig:
-        pass
+        try:
+            data_transformation_config = self.config_info[DATA_TRANSFORMATION_CONFIG_KEY]
+            add_bedroom_per_room = data_transformation_config[BEDROOM_PER_ROOM_KEY]
+            transformed_dir = data_transformation_config[DATA_TRANSFORMED_DIR_KEY]
+            transformed_train_dir = os.path.join(ROOT_DIR,transformed_dir,data_transformation_config[DATA_TRANSFORMED_TRAIN_DIR_KEY])
+            transformed_test_dir = os.path.join(ROOT_DIR,transformed_dir,data_transformation_config[DATA_TRANSFORMED_TEST_DIR_KEY])
+            preprocessing_dir = data_transformation_config[PREPROCESSED_OBJECT_DIR_KEY]
+            preprocessed_object_file_path = os.path.join(ROOT_DIR,preprocessing_dir,data_transformation_config[PREPROCESSED_OBJECT_NAME_KEY])
+
+            data_transformation_config = DataTransformConfig(add_bedroom_per_room=add_bedroom_per_room,
+                                                             transformed_train_dir=transformed_train_dir,
+                                                             transformed_test_dir=transformed_test_dir,
+                                                             preprocessed_object_file_path=preprocessed_object_file_path)
+
+            return data_transformation_config
+
+        except Exception as e:
+            raise customException(e, sys) from e
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
-        pass
+        try:
+            model_trainer_config = self.config_info[MODEL_TRAINED_CONFIG_KEY]
+            trained_model_dir = model_trainer_config[MODEL_TRAINED_DIR_KEY]
+            trained_model_file_path = os.path.join(ROOT_DIR,trained_model_dir,model_trainer_config[MODEL_TRAINED_NAME_KEY])
+            base_accuracy = model_trainer_config[BASE_ACCURACY_KEY]
+
+            model_trainer_config = ModelTrainerConfig(trained_model_file_path=trained_model_file_path,
+                                                      base_accuracy =base_accuracy )
+            return model_trainer_config
+
+        except Exception as e:
+            raise customException(e, sys) from e
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
-        pass
+        try:
+            model_evaluation_config = self.config_info[MODEL_TRAINED_CONFIG_KEY]
+            model_evaluation_file_path = model_evaluation_config[MODEL_EVALUATION_FILE_NAME_KEY]
+
+            model_evaluation_config = ModelEvaluationConfig(model_evaluation_file_path= model_evaluation_file_path,
+                                                            time_stamp= CURRENT_TIME_STAMP)
+
+            return model_evaluation_config
+
+        except Exception as e:
+            raise customException(e, sys) from e
 
     def get_model_pusher_config(self) -> ModelPusherConfig:
-        pass
+        try:
+            model_pusher_config = self.config_info[MODEL_PUSHER_CONFIG_KEY]
+            export_dir_path = model_pusher_config[EXPORT_DIR_PATH_KEY]
+
+            model_pusher_config = ModelPusherConfig(export_dir_path=export_dir_path )
+        except Exception as e:
+            raise customException(e, sys) from e
 
     def get_training_pipeline_config(self) ->TrainingPipelineConfig:
         try:
