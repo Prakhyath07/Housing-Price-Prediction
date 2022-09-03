@@ -102,17 +102,17 @@ class DataIngestion:
                 strat_train_set.to_csv(train_file_path,index=False)
 
             if strat_test_set is not None:
-                os.makedirs(self.data_ingestion_config.ingested_test_dir, exist_ok=
-                True)
+                os.makedirs(self.data_ingestion_config.ingested_test_dir, exist_ok= True)
                 logging.info(f"exporting testing dataset to file: [{test_file_path}]")
                 strat_test_set.to_csv(test_file_path, index=False)
 
-            data_ingestion_artifact =DataIngestionArtifact(train_file_path=train_file_path,
-                                  test_file_path=test_file_path,
-                                  is_ingested=True,
-                                  message="Data ingestion completed successfully")
+            data_ingestion_artifact = DataIngestionArtifact(train_file_path=train_file_path,
+                                                            test_file_path=test_file_path,
+                                                            is_ingested=True,
+                                                            message="Data ingestion completed successfully")
             logging.info(f"Data ingestion artifact: [{data_ingestion_artifact}]")
-            return DataIngestionArtifact
+
+            return data_ingestion_artifact
 
 
 
@@ -120,7 +120,7 @@ class DataIngestion:
             raise customException(e, sys) from e
 
 
-    def initiate_data_ingesion(self) ->DataIngestionArtifact:
+    def initiate_data_ingestion(self) ->DataIngestionArtifact:
         try:
             tgz_file_path = self.download_housing_data()
             self.extract_tgz_file(tgz_file_path=tgz_file_path)
@@ -132,4 +132,4 @@ class DataIngestion:
 
 
     def __del__(self):
-        logging.info(f"{'='*20}Data ingesion log completed {'='*20}\n\n")
+        logging.info(f"{'='*20}Data ingestion log completed {'='*20}\n\n")
