@@ -41,8 +41,8 @@ DATA_TRANSFORMED_DIR_KEY = "transformed_dir"
 DATA_TRANSFORMED_TRAIN_DIR_KEY = "transformed_train_dir"
 DATA_TRANSFORMED_TEST_DIR_KEY = "transformed_test_dir"
 PREPROCESSED_OBJECT_DIR_KEY = "preprocessing_dir"
-PREPROCESSED_OBJECT_NAME_KEY = "preprocessed.pkl"
-
+PREPROCESSED_OBJECT_NAME_KEY = "preprocessed_object_file_name"
+DATA_TRANSFORMATION_ARTIFACT_DIR = "data_transformation"
 
 ## model training constants
 MODEL_TRAINED_CONFIG_KEY = "model_trainer_config"
@@ -59,4 +59,16 @@ MODEL_EVALUATION_FILE_NAME_KEY = "model_evaluation_file_name"
 ## model pusher constants
 MODEL_PUSHER_CONFIG_KEY = "model_pusher_config"
 EXPORT_DIR_PATH_KEY = "model_export_dir"
+
+COLUMN_TOTAL_ROOMS = "total_rooms"
+COLUMN_POPULATION = "population"
+COLUMN_HOUSEHOLDS = "households"
+COLUMN_TOTAL_BEDROOM = "total_bedrooms"
+DATASET_SCHEMA_COLUMNS_KEY=  "columns"
+
+NUMERICAL_COLUMN_KEY="numerical_columns"
+CATEGORICAL_COLUMN_KEY = "categorical_columns"
+
+
+TARGET_COLUMN_KEY="target_column"
 

@@ -7,8 +7,8 @@ def main():
         pipeline=Pipeline()
         pipeline.run_pipeline()
         # config = Configuration()
-        # data_valid_config=config.get_data_validation_config()
-        # print(data_valid_config)
+        # data_transfrom_config=config.get_data_transformation_config()
+        # print(data_transfrom_config)
 
     except Exception as e:
         print(e)

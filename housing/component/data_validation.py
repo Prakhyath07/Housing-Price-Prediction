@@ -3,9 +3,10 @@ from housing.logger import logging
 from housing.exception import customException
 from housing.entity.config_entity import DataValidationConfig
 from housing.entity.artifact_entity import DataIngestionArtifact,DataValidationArtifact
-import os,sys
+import sys
 import pandas as pd
 from housing.util.util import read_yaml_file
+from housing.constant import *
 
 from evidently.model_profile import Profile
 from evidently.model_profile.sections import DataDriftProfileSection
@@ -17,6 +18,7 @@ class DataValidation:
     def __init__(self,data_validation_config:DataValidationConfig,
                  data_ingestion_artifact:DataIngestionArtifact):
         try:
+            logging.info(f"{'=' * 20}Data Validation started {'=' * 20}")
             self.data_validation_config = data_validation_config
             self.data_ingestion_artifact = data_ingestion_artifact
 
@@ -70,7 +72,7 @@ class DataValidation:
             config_info = read_yaml_file(file_path=schema_file)
 
             df_train,df_test= self.get_train_and_test_df()
-            cat_cols = config_info['categorical_columns']
+            cat_cols = config_info[CATEGORICAL_COLUMN_KEY]
             if len(config_info['columns']) != len(df_train.columns):
                 logging.info(f" number of columns in schema file: {len(config_info['columns'])} "
                              f"is not equal to number of columns in train dataset: {len(df_train.columns)}")
@@ -87,7 +89,7 @@ class DataValidation:
                         validation_status = False
 
 
-            cat_cols = config_info['categorical_columns']
+            cat_cols = config_info[CATEGORICAL_COLUMN_KEY]
             if len(config_info['columns']) != len(df_test.columns):
                 logging.info(f" number of columns in schema file: {len(config_info['columns'])} "
                              f"is not equal to number of columns in test dataset: {len(df_test.columns)}")
@@ -175,7 +177,7 @@ class DataValidation:
             validated = a and b and c
 
             data_validation_artifact = DataValidationArtifact(
-                scehma_file_path= self.data_validation_config.schema_file_path,
+                schema_file_path= self.data_validation_config.schema_file_path,
                 report_file_path= self.data_validation_config.report_file_path,
                 report_page_file_path=self.data_validation_config.report_page_file_path,
                 is_validated=validated,
@@ -191,3 +193,6 @@ class DataValidation:
 
         except Exception as e:
             raise customException(e,sys) from e
+
+    def __del__(self):
+        logging.info(f"{'='*20}Data validation log completed {'='*20}\n\n")
