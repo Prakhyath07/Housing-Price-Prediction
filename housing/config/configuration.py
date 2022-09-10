@@ -95,13 +95,21 @@ class Configuration:
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
         try:
+            artifact_dir = self.training_pipeline_config.artifact_dir
+            model_artifact_dir = os.path.join(artifact_dir,
+                                              MODEL_TRAINER_ARTIFACT_DIR,
+                                              self.time_stamp)
             model_trainer_config = self.config_info[MODEL_TRAINED_CONFIG_KEY]
             trained_model_dir = model_trainer_config[MODEL_TRAINED_DIR_KEY]
-            trained_model_file_path = os.path.join(ROOT_DIR,trained_model_dir,model_trainer_config[MODEL_TRAINED_NAME_KEY])
+            trained_model_file_path = os.path.join(model_artifact_dir,trained_model_dir,model_trainer_config[MODEL_TRAINED_NAME_KEY])
             base_accuracy = model_trainer_config[BASE_ACCURACY_KEY]
+            model_config_file_path = os.path.join(ROOT_DIR,model_trainer_config[MODEL_CONFIG_DIR_KEY],
+                                                  model_trainer_config[MODEL_CONFIG_FILE_NAME_KEY])
 
             model_trainer_config = ModelTrainerConfig(trained_model_file_path=trained_model_file_path,
-                                                      base_accuracy =base_accuracy )
+                                                      base_accuracy =base_accuracy,
+                                                      model_config_file_path=model_config_file_path)
+            logging.info(f"model trainer config: {model_trainer_config}")
             return model_trainer_config
 
         except Exception as e:
@@ -109,11 +117,16 @@ class Configuration:
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
         try:
-            model_evaluation_config = self.config_info[MODEL_TRAINED_CONFIG_KEY]
-            model_evaluation_file_path = model_evaluation_config[MODEL_EVALUATION_FILE_NAME_KEY]
+
+            artifact_dir = os.path.join(self.training_pipeline_config.artifact_dir,
+                                        MODEL_EVALUATION_ARTIFACT_DIR)
+            model_evaluation_config = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
+            model_evaluation_file_path = os.path.join(artifact_dir, model_evaluation_config[MODEL_EVALUATION_FILE_NAME_KEY])
 
             model_evaluation_config = ModelEvaluationConfig(model_evaluation_file_path= model_evaluation_file_path,
-                                                            time_stamp= CURRENT_TIME_STAMP)
+                                                            time_stamp= self.time_stamp)
+
+            logging.info(f"Model evaluation confit: {model_evaluation_config}")
 
             return model_evaluation_config
 
@@ -122,10 +135,13 @@ class Configuration:
 
     def get_model_pusher_config(self) -> ModelPusherConfig:
         try:
+            time_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
             model_pusher_config = self.config_info[MODEL_PUSHER_CONFIG_KEY]
-            export_dir_path = model_pusher_config[EXPORT_DIR_PATH_KEY]
+            export_dir_path = os.path.join(ROOT_DIR,model_pusher_config[EXPORT_DIR_PATH_KEY],time_stamp)
 
             model_pusher_config = ModelPusherConfig(export_dir_path=export_dir_path )
+            logging.info(f"Model pusher config {model_pusher_config}")
+            return model_pusher_config
         except Exception as e:
             raise customException(e, sys) from e
 
